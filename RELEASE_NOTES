@@ -1,0 +1,65 @@
+Version 0.3:
+
+New features:
+-------------
+
+- Added more and refined existing example code and example results 
+- Added an interactive input option for Semantic Unit identification (lets you choose project name and entry points)
+- Finished adding rules for the Semantic Unit identification for C code (we now have a rule for each statement type where it makes sense, more information in the documentation)
+- Added more configuration options for the Semantic Unit identification process, like debug output, variability information, different output formats, etc. (see documentation for more details)
+- Added a patchGenerator script that transforms the result of the Semantic Unit identification process into a reduced slice of a software project (folders and *.c/*.h code files). 
+This can be used as a foundation for patch generation (e.g. with "git merge"). See documentation for more details.
+- Improved performance of include analysis
+- Added a "IS_HEADER_OF" relation to improve the Semantic Unit identification process
+
+
+
+Version 0.2:
+
+New features:
+-------------
+
+- Added example code and example results (for SPLC paper)
+- Updated documentation
+- Allow features (as string input) as entry point for Semantic Unit identification
+- Added more rules for the Semantic Unit identification (see commit logs for details) 
+
+
+
+
+Version 0.1:
+
+New features:
+-------------
+
+- Added custom script (plotDB) for plotting the whole database as AST or full CPG
+- Added custom script (SUI.py) for Semantic Unit identification based on selected entry points
+- Refined preprocessor parsing on module and function level
+- Add include edges for #include statements that include source files
+
+
+Bug fixes:
+----------
+
+- Fixed problems when resolving preprocessor nesting
+
+
+
+Initial Version:
+
+New features:
+-------------
+
+- Added custom script for generation of all different graph types (cfg, ast, etc) as .dot and .pn files for every function in a project 
+- Moved to a newer Tinkerpop Version (for better performance)
+
+
+Bug fixes:
+----------
+
+- Fixed ResultProcessor
+- Removed clone of ocopus tools in mutils
+- Fixed memory leak in OctopusClientWriter
+- Fixed bugs in documentaion
+
+

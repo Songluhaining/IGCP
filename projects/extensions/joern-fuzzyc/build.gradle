@@ -1,0 +1,48 @@
+plugins {
+	id 'java'
+	id 'antlr'
+}
+
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	antlr "org.antlr:antlr4:4.5.3"
+
+	implementation project(':projects:extensions:jpanlib')
+
+	implementation group: 'com.tunnelvisionlabs', name: 'antlr4-annotations', version: '4.5.3'
+	implementation group: 'com.tunnelvisionlabs', name: 'antlr4-runtime', version: '4.5.3'
+	implementation group: 'commons-cli', name: 'commons-cli', version: '1.2'
+	implementation group: 'org.neo4j', name: 'neo4j', version: '2.1.8'
+	testImplementation group: 'junit', name: 'junit', version: '4.12'
+}
+
+// Generate Java files from grammar
+generateGrammarSource {
+	outputs.upToDateWhen { false }
+
+	if (System.getProperty("os.name").toLowerCase().contains("windows")) {
+		// Windows: use backslashes
+		arguments << "-lib" << "src\\main\\java\\antlr"
+		source = "src\\main\\java\\antlr"
+		includes = ['**\\Function.g4', '**\\Module.g4']
+		outputDirectory = new File("src\\main\\java\\")
+	} else {
+		// Unix-like systems
+		arguments << "-lib" << "src/main/java/antlr"
+		source = "src/main/java/antlr"
+		includes = ['Function.g4', 'Module.g4']
+		outputDirectory = new File("src/main/java/")
+	}
+}
+
+task copyToLib3(type: Copy) {
+	into "lib"
+	from configurations.runtimeClasspath
+}
+
+build.dependsOn generateGrammarSource
+build.dependsOn copyToLib3

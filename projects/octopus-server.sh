@@ -1,0 +1,25 @@
+#!/bin/bash
+
+ulimit -u 1024  # 限制最大线程数，建议加上
+
+# JVM内存参数（堆 + 栈）
+MAXHEAP="-Xms50g -Xmx50g -Xss2m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:InitiatingHeapOccupancyPercent=30"
+
+# 其他系统和应用参数，限制直接内存为2GB
+OPTS_FROM_ORIENTDB="-Djna.nosys=true -XX:+HeapDumpOnOutOfMemoryError -XX:MaxDirectMemorySize=16g -Djava.awt.headless=true -Dfile.encoding=UTF8 -Drhino.opt.level=9"
+
+# JMX监控设置（可选）
+JMX=" -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=1999 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Djava.rmi.server.hostname=147.172.177.204"
+
+OCTOPUS_HOME="$( cd "$( dirname "$0" )" && pwd )"
+
+while getopts :d: opt
+do
+    case $opt in
+        d) JAVA_OPTS="$JAVA_OPTS -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=$OPTARG"
+    esac
+done
+
+export JAVA_OPTS
+
+exec java -Dio.netty.leakDetectionLevel=advanced $JMX $JAVA_OPTS $MAXHEAP $OPTS_FROM_ORIENTDB -DOCTOPUS_HOME="$OCTOPUS_HOME" -cp "$OCTOPUS_HOME/extensions/*:$OCTOPUS_HOME/lib/*:$OCTOPUS_HOME/build/libs/octopus.jar" octopus.OctopusMain
